@@ -12,7 +12,7 @@ export const usersJson = [
     coordinate: [73.908, 18.5755],
   },
   {
-    name: 'Pune',
+    name: 'Khadki',
     latitude: 18.5626,
     longitude: 73.8524,
     coordinate: [73.8524, 18.5626],

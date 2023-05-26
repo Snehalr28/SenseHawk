@@ -1,6 +1,8 @@
 import {getDistance} from 'geolib';
 import {usersJson} from './users';
-
+/*
+To calculate the distance from lat long
+*/
 export const distanceCalculator = (
   Lat1: number,
   Long1: number,
@@ -18,23 +20,29 @@ export const distanceCalculator = (
     },
   );
 };
-
-export const getFilteredArray = (r: {
-  properties: any;
-  gestures?: {isGestureActive: boolean} | undefined;
-}) => {
+/*
+It is taking parameters as regoin and km Range and filter user array.
+*/
+export const getFilteredUserWithinKm = (
+  r: {
+    properties: any;
+    gestures?: {isGestureActive: boolean} | undefined;
+  },
+  kmRange: number,
+) => {
   const [cLong, cLat] = r.properties.center;
   let distanceInMeter: number = 0;
   let distanceInKm: number = 0;
   const filterArr: any[] = usersJson.filter(user => {
     distanceInMeter = distanceCalculator(
-      cLong,
       cLat,
-      user.longitude,
+      cLong,
       user.latitude,
+      user.longitude,
     );
     distanceInKm = distanceInMeter / 1000;
-    return distanceInKm <= 1;
+    console.log('distanceInKm:', distanceInKm, user.name);
+    return distanceInKm <= kmRange;
   });
   return filterArr;
 };

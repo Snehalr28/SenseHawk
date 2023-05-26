@@ -5,7 +5,7 @@ import Mapbox from '@rnmapbox/maps';
 import {styles} from './MapView.style';
 import {mapCamera} from '../../utils/MapHelpMethods';
 import {MarkerView} from '@rnmapbox/maps';
-import {getFilteredArray} from '../../utils/CalculationMethods';
+import {getFilteredUserWithinKm} from '../../utils/CalculationMethods';
 Mapbox.setAccessToken(
   'sk.eyJ1Ijoic25laGFscjI4MDMiLCJhIjoiY2xoeGJibmYwMDVuYzNlcnM3dW9xaG9yYyJ9.GrNn7_DRiEgz0kkZTiRAgg',
 );
@@ -15,11 +15,17 @@ export default function MapView({navigation}) {
   const [users, setUsers] = useState([
     {coordinate: [73.8544541, 18.521428], name: 'You'},
   ]);
+  /*
+  onRegion Change of mapView
+  It is having filtered funtion inbuild which returns Array of users within a defined km range.
+  we can pass region and km range to getFilteredUserWithinKm Func
+  */
   const onRegionChange = (r: {
     properties: any;
     gestures?: {isGestureActive: boolean};
   }) => {
-    let filterArr: any[] = getFilteredArray(r);
+    console.log(r);
+    let filterArr: any[] = getFilteredUserWithinKm(r, 3);
     setUsers([{coordinate: r.properties.center, name: 'You'}, ...filterArr]);
   };
 
@@ -33,7 +39,7 @@ export default function MapView({navigation}) {
               <TouchableOpacity
                 key={`${i + 1}`}
                 onPress={() =>
-                  navigation.navigate('ChatScreen', {name: user.name, count:0})
+                  navigation.navigate('ChatScreen', {name: user.name, count: 0})
                 }>
                 <Text> {user.name} </Text>
                 <Image
@@ -41,8 +47,8 @@ export default function MapView({navigation}) {
                   key={`${i + 2}`}
                   source={
                     i === 0
-                      ? require('../../Assets/marker_image.png')
-                      : require('../../Assets/user_blue.png')
+                      ? require('../../assets/marker_image.png')
+                      : require('../../assets/user_blue.png')
                   }
                 />
               </TouchableOpacity>
